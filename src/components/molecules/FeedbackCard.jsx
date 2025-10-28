@@ -7,7 +7,7 @@ import Badge from "@/components/atoms/Badge";
 import Error from "@/components/ui/Error";
 import VoteButton from "@/components/molecules/VoteButton";
 
-const FeedbackCard = ({ feedback, onVote }) => {
+const FeedbackCard = ({ feedback, onVote, onClick }) => {
   const handleUpvote = async () => {
     try {
       await feedbackService.upvote(feedback.Id, "currentUser")
@@ -43,12 +43,13 @@ const FeedbackCard = ({ feedback, onVote }) => {
     }
   }
 
-  return (
+return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -2, shadow: "0 8px 30px rgba(0, 0, 0, 0.12)" }}
-      className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:border-gray-200 transition-all duration-300"
+      onClick={onClick}
+      className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:border-gray-200 transition-all duration-300 cursor-pointer"
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1 min-w-0">

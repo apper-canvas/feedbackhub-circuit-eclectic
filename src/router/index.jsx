@@ -1,11 +1,11 @@
-import { createBrowserRouter } from 'react-router-dom'
-import { Suspense, lazy } from 'react'
-import Layout from '@/components/organisms/Layout'
+import { createBrowserRouter } from "react-router-dom";
+import React, { Suspense, lazy } from "react";
+import Layout from "@/components/organisms/Layout";
 
-const Feedback = lazy(() => import("@/components/pages/Feedback"))
-const Roadmap = lazy(() => import("@/components/pages/Roadmap"))
-const Changelog = lazy(() => import("@/components/pages/Changelog"))
-const NotFound = lazy(() => import("@/components/pages/NotFound"))
+const Feedback = lazy(() => import("@/components/pages/Feedback"));
+const Roadmap = lazy(() => import("@/components/pages/Roadmap"));
+const Changelog = lazy(() => import("@/components/pages/Changelog"));
+const NotFound = lazy(() => import("@/components/pages/NotFound"));
 
 const mainRoutes = [
   {
@@ -22,6 +22,14 @@ const mainRoutes = [
     element: (
       <Suspense fallback={<div>Loading.....</div>}>
         <Feedback />
+      </Suspense>
+    )
+  },
+  {
+    path: "feedback/:id",
+    element: (
+      <Suspense fallback={<div>Loading.....</div>}>
+        {React.createElement(lazy(() => import("@/components/pages/FeedbackDetail")))}
       </Suspense>
     )
   },

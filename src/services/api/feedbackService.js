@@ -1,6 +1,9 @@
-import feedbackData from '@/services/mockData/feedback.json'
+import feedbackData from "@/services/mockData/feedback.json";
+import React from "react";
+import Error from "@/components/ui/Error";
 
 let mockFeedback = [...feedbackData]
+let commentIdCounter = 100
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -122,8 +125,47 @@ async upvote(id, userId) {
     return { ...feedback }
   },
 
-  async updateStatus(id, status) {
+async updateStatus(id, status) {
     await delay(300)
-    return this.update(id, { status })
+    const index = mockFeedback.findIndex(item => item.Id === parseInt(id))
+    if (index === -1) {
+      throw new Error('Feedback not found')
+    }
+    mockFeedback[index] = {
+      ...mockFeedback[index],
+      status,
+      updatedAt: new Date().toISOString()
+    }
+    return { ...mockFeedback[index] }
+  },
+
+  async getComments(feedbackId) {
+    await delay(200)
+    const feedback = mockFeedback.find(item => item.Id === parseInt(feedbackId))
+    if (!feedback) {
+      throw new Error('Feedback not found')
+    }
+    return feedback.comments || []
+  },
+
+  async addComment(feedbackId, commentData) {
+    await delay(300)
+    const feedback = mockFeedback.find(item => item.Id === parseInt(feedbackId))
+    if (!feedback) {
+      throw new Error('Feedback not found')
+    }
+    
+    if (!feedback.comments) {
+      feedback.comments = []
+    }
+
+    const newComment = {
+      Id: ++commentIdCounter,
+      author: commentData.author || 'Anonymous User',
+      content: commentData.content,
+      createdAt: new Date().toISOString()
+    }
+
+    feedback.comments.push(newComment)
+    return { ...newComment }
   }
-}

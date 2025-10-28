@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { feedbackService } from "@/services/api/feedbackService";
@@ -12,6 +13,7 @@ import StatusFilter from "@/components/molecules/StatusFilter";
 import SortControl from "@/components/molecules/SortControl";
 import SearchBar from "@/components/molecules/SearchBar";
 const FeedbackList = () => {
+  const navigate = useNavigate();
 const [feedbackData, setFeedbackData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -187,9 +189,10 @@ return (
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <FeedbackCard
+<FeedbackCard
                 feedback={feedback}
                 onVote={handleVote}
+                onClick={() => navigate(`/feedback/${feedback.Id}`)}
               />
             </motion.div>
           ))}
