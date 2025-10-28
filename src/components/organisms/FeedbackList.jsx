@@ -65,15 +65,22 @@ const FeedbackList = () => {
     })
   }, [feedbackData, searchQuery, statusFilter, sortBy])
 
-  const handleVote = async (feedbackId) => {
+const handleVote = async (feedbackId) => {
     setFeedbackData(prev => 
-      prev.map(feedback => 
-        feedback.Id === feedbackId 
-          ? { ...feedback, votes: feedback.votes + 1, votedBy: [...(feedback.votedBy || []), "currentUser"] }
-          : feedback
-      )
+      prev.map(feedback => {
+        if (feedback.Id === feedbackId) {
+          const hasVoted = feedback.votedBy?.includes("currentUser")
+          return {
+            ...feedback,
+            votes: hasVoted ? feedback.votes - 1 : feedback.votes + 1,
+            votedBy: hasVoted 
+              ? (feedback.votedBy || []).filter(id => id !== "currentUser")
+              : [...(feedback.votedBy || []), "currentUser"]
+          }
+        }
+        return feedback
+      })
     )
-    toast.success("Vote recorded!")
   }
 
   const handleFeedbackSubmit = (newFeedback) => {

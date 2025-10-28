@@ -58,19 +58,25 @@ export const feedbackService = {
     return true
   },
 
-  async vote(id, userId) {
+async vote(id, userId) {
     await delay(200)
     const feedback = mockFeedback.find(item => item.Id === parseInt(id))
     if (!feedback) {
       throw new Error('Feedback not found')
     }
     
-    if (feedback.votedBy.includes(userId)) {
-      throw new Error('Already voted')
+    const hasVoted = feedback.votedBy.includes(userId)
+    
+    if (hasVoted) {
+      // Remove vote (toggle off)
+      feedback.votes -= 1
+      feedback.votedBy = feedback.votedBy.filter(id => id !== userId)
+    } else {
+      // Add vote (toggle on)
+      feedback.votes += 1
+      feedback.votedBy.push(userId)
     }
-
-    feedback.votes += 1
-    feedback.votedBy.push(userId)
+    
     feedback.updatedAt = new Date().toISOString()
     
     return { ...feedback }
