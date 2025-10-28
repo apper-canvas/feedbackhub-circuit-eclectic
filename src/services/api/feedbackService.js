@@ -1,7 +1,4 @@
 import feedbackData from "@/services/mockData/feedback.json";
-import React from "react";
-import Error from "@/components/ui/Error";
-
 let mockFeedback = [...feedbackData]
 let commentIdCounter = 100
 
@@ -165,7 +162,7 @@ async updateStatus(id, status) {
       content: commentData.content,
       createdAt: new Date().toISOString()
     }
-
-    feedback.comments.push(newComment)
+feedback.comments.push(newComment)
     return { ...newComment }
   }
+}
