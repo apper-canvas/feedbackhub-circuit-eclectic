@@ -1,14 +1,25 @@
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import ApperIcon from "@/components/ApperIcon"
-import Badge from "@/components/atoms/Badge"
-import VoteButton from "@/components/molecules/VoteButton"
-import { feedbackService } from "@/services/api/feedbackService"
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { feedbackService } from "@/services/api/feedbackService";
+import React from "react";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Error from "@/components/ui/Error";
+import VoteButton from "@/components/molecules/VoteButton";
 
 const FeedbackCard = ({ feedback, onVote }) => {
-  const handleVote = async () => {
+  const handleUpvote = async () => {
     try {
-      await feedbackService.vote(feedback.Id, "currentUser")
+      await feedbackService.upvote(feedback.Id, "currentUser")
+      onVote?.(feedback.Id)
+    } catch (error) {
+      throw new Error(error.message)
+    }
+  }
+
+  const handleDownvote = async () => {
+    try {
+      await feedbackService.downvote(feedback.Id, "currentUser")
       onVote?.(feedback.Id)
     } catch (error) {
       throw new Error(error.message)
@@ -49,10 +60,13 @@ const FeedbackCard = ({ feedback, onVote }) => {
           </p>
         </div>
         <div className="ml-4 flex-shrink-0">
-          <VoteButton
-            votes={feedback.votes}
-            hasVoted={feedback.votedBy?.includes("currentUser")}
-            onVote={handleVote}
+<VoteButton
+            upvotes={feedback.upvotes}
+            downvotes={feedback.downvotes}
+            hasUpvoted={feedback.upvotedBy?.includes("currentUser")}
+            hasDownvoted={feedback.downvotedBy?.includes("currentUser")}
+            onUpvote={handleUpvote}
+            onDownvote={handleDownvote}
           />
         </div>
       </div>

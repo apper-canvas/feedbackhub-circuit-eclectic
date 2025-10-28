@@ -24,8 +24,10 @@ export const feedbackService = {
     const newFeedback = {
       Id: Math.max(...mockFeedback.map(f => f.Id), 0) + 1,
       ...feedbackData,
-      votes: 0,
-      votedBy: [],
+upvotes: 0,
+      downvotes: 0,
+      upvotedBy: [],
+      downvotedBy: [],
       status: 'new',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -58,23 +60,61 @@ export const feedbackService = {
     return true
   },
 
-async vote(id, userId) {
+async upvote(id, userId) {
     await delay(200)
     const feedback = mockFeedback.find(item => item.Id === parseInt(id))
     if (!feedback) {
       throw new Error('Feedback not found')
     }
     
-    const hasVoted = feedback.votedBy.includes(userId)
+    const hasUpvoted = feedback.upvotedBy.includes(userId)
+    const hasDownvoted = feedback.downvotedBy.includes(userId)
     
-    if (hasVoted) {
-      // Remove vote (toggle off)
-      feedback.votes -= 1
-      feedback.votedBy = feedback.votedBy.filter(id => id !== userId)
+    if (hasUpvoted) {
+      // Remove upvote (toggle off)
+      feedback.upvotes -= 1
+      feedback.upvotedBy = feedback.upvotedBy.filter(id => id !== userId)
     } else {
-      // Add vote (toggle on)
-      feedback.votes += 1
-      feedback.votedBy.push(userId)
+      // Add upvote (toggle on)
+      feedback.upvotes += 1
+      feedback.upvotedBy.push(userId)
+      
+      // Remove downvote if exists
+      if (hasDownvoted) {
+        feedback.downvotes -= 1
+        feedback.downvotedBy = feedback.downvotedBy.filter(id => id !== userId)
+      }
+    }
+    
+    feedback.updatedAt = new Date().toISOString()
+    
+    return { ...feedback }
+  },
+
+  async downvote(id, userId) {
+    await delay(200)
+    const feedback = mockFeedback.find(item => item.Id === parseInt(id))
+    if (!feedback) {
+      throw new Error('Feedback not found')
+    }
+    
+    const hasDownvoted = feedback.downvotedBy.includes(userId)
+    const hasUpvoted = feedback.upvotedBy.includes(userId)
+    
+    if (hasDownvoted) {
+      // Remove downvote (toggle off)
+      feedback.downvotes -= 1
+      feedback.downvotedBy = feedback.downvotedBy.filter(id => id !== userId)
+    } else {
+      // Add downvote (toggle on)
+      feedback.downvotes += 1
+      feedback.downvotedBy.push(userId)
+      
+      // Remove upvote if exists
+      if (hasUpvoted) {
+        feedback.upvotes -= 1
+        feedback.upvotedBy = feedback.upvotedBy.filter(id => id !== userId)
+      }
     }
     
     feedback.updatedAt = new Date().toISOString()
