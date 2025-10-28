@@ -1,17 +1,18 @@
-import { useState, useEffect, useMemo } from "react"
-import { motion } from "framer-motion"
-import { toast } from "react-toastify"
-import ApperIcon from "@/components/ApperIcon"
-import Button from "@/components/atoms/Button"
-import SearchBar from "@/components/molecules/SearchBar"
-import StatusFilter from "@/components/molecules/StatusFilter"
-import SortControl from "@/components/molecules/SortControl"
-import FeedbackCard from "@/components/molecules/FeedbackCard"
-import FeedbackSubmissionModal from "@/components/organisms/FeedbackSubmissionModal"
-import Loading from "@/components/ui/Loading"
-import Error from "@/components/ui/Error"
-import Empty from "@/components/ui/Empty"
-import { feedbackService } from "@/services/api/feedbackService"
+import React, { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { feedbackService } from "@/services/api/feedbackService";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Feedback from "@/components/pages/Feedback";
+import FeedbackSubmissionModal from "@/components/organisms/FeedbackSubmissionModal";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import FeedbackCard from "@/components/molecules/FeedbackCard";
+import StatusFilter from "@/components/molecules/StatusFilter";
+import SortControl from "@/components/molecules/SortControl";
+import SearchBar from "@/components/molecules/SearchBar";
 
 const FeedbackList = () => {
   const [feedbackData, setFeedbackData] = useState([])
@@ -178,7 +179,7 @@ const FeedbackList = () => {
         </motion.div>
       </div>
 
-      {/* Feedback List */}
+{/* Feedback List */}
       {filteredAndSortedFeedback.length === 0 ? (
         <Empty
           title={searchQuery || statusFilter !== "all" ? "No feedback matches your filters" : "No feedback yet"}
@@ -188,7 +189,7 @@ const FeedbackList = () => {
           icon="MessageSquare"
         />
       ) : (
-        <div className="grid gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredAndSortedFeedback.map((feedback, index) => (
             <motion.div
               key={feedback.Id}
