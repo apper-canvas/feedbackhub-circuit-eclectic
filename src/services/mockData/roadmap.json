@@ -6,7 +6,8 @@
     "timeline": "now",
     "linkedFeedbackIds": [2, 4],
     "estimatedDate": "March 2024",
-    "status": "In Development"
+    "status": "In Progress",
+    "votes": 89
   },
   {
     "Id": 2,
@@ -15,7 +16,8 @@
     "timeline": "now",
     "linkedFeedbackIds": [5],
     "estimatedDate": "February 2024",
-    "status": "Planning"
+    "status": "In Progress",
+    "votes": 67
   },
   {
     "Id": 3,
@@ -24,7 +26,8 @@
     "timeline": "next",
     "linkedFeedbackIds": [7],
     "estimatedDate": "May 2024",
-    "status": "Design Phase"
+    "status": "Planned",
+    "votes": 54
   },
   {
     "Id": 4,
@@ -33,7 +36,8 @@
     "timeline": "next",
     "linkedFeedbackIds": [1, 8],
     "estimatedDate": "June 2024",
-    "status": "Research"
+    "status": "Planned",
+    "votes": 43
   },
   {
     "Id": 5,
@@ -42,7 +46,8 @@
     "timeline": "later",
     "linkedFeedbackIds": [],
     "estimatedDate": "Q4 2024",
-    "status": "Concept"
+    "status": "Completed",
+    "votes": 78
   },
   {
     "Id": 6,
@@ -51,6 +56,7 @@
     "timeline": "later",
     "linkedFeedbackIds": [],
     "estimatedDate": "Q1 2025",
-    "status": "Roadmap"
+    "status": "Planned",
+    "votes": 12
   }
 ]

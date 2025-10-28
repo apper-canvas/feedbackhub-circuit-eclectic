@@ -30,31 +30,34 @@ const RoadmapBoard = () => {
   }, [])
 
   const groupByTimeline = (items) => {
-    return {
-      now: items.filter(item => item.timeline === "now"),
-      next: items.filter(item => item.timeline === "next"),
-      later: items.filter(item => item.timeline === "later")
+return {
+      planned: items.filter(item => item.status === "Planned"),
+      inProgress: items.filter(item => item.status === "In Progress"),
+      completed: items.filter(item => item.status === "Completed")
     }
   }
 
-  const timelineConfig = {
-    now: {
-      title: "Now",
-      description: "Currently in development",
-      color: "from-green-500 to-green-600",
-      icon: "Play"
-    },
-    next: {
-      title: "Next",
-      description: "Coming up soon",
+const statusConfig = {
+    planned: {
+      title: "Planned",
+      description: "Ideas ready to build",
       color: "from-blue-500 to-blue-600",
+      bgColor: "bg-blue-50",
+      icon: "CheckCircle"
+    },
+    inProgress: {
+      title: "In Progress",
+      description: "Currently being built",
+      color: "from-amber-500 to-amber-600",
+      bgColor: "bg-amber-50",
       icon: "Clock"
     },
-    later: {
-      title: "Later",
-      description: "Future considerations",
-      color: "from-purple-500 to-purple-600",
-      icon: "Calendar"
+    completed: {
+      title: "Completed",
+      description: "Shipped and live",
+      color: "from-green-500 to-green-600",
+      bgColor: "bg-green-50",
+      icon: "Rocket"
     }
   }
 
@@ -77,9 +80,9 @@ const RoadmapBoard = () => {
         </div>
       </div>
 
-      {/* Stats */}
+{/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {Object.entries(timelineConfig).map(([key, config]) => (
+        {Object.entries(statusConfig).map(([key, config]) => (
           <motion.div
             key={key}
             initial={{ opacity: 0, y: 20 }}
@@ -92,7 +95,7 @@ const RoadmapBoard = () => {
                 <div className="text-2xl font-bold">
                   {groupedItems[key].length}
                 </div>
-                <div className={`${key === 'now' ? 'text-green-100' : key === 'next' ? 'text-blue-100' : 'text-purple-100'}`}>
+                <div className="text-white/90">
                   {config.title}
                 </div>
               </div>
@@ -101,7 +104,7 @@ const RoadmapBoard = () => {
         ))}
       </div>
 
-      {/* Roadmap Board */}
+{/* Kanban Board */}
       {roadmapData.length === 0 ? (
         <Empty
           title="No roadmap items yet"
@@ -110,9 +113,9 @@ const RoadmapBoard = () => {
         />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {Object.entries(timelineConfig).map(([timeline, config]) => (
-            <div key={timeline} className="space-y-4">
-              <div className="flex items-center">
+          {Object.entries(statusConfig).map(([status, config]) => (
+            <div key={status} className={`rounded-xl ${config.bgColor} p-4 border border-gray-200`}>
+              <div className="flex items-center mb-4">
                 <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${config.color} mr-3`}></div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
@@ -122,14 +125,14 @@ const RoadmapBoard = () => {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                {groupedItems[timeline].length === 0 ? (
-                  <div className="bg-gray-50 rounded-xl p-6 text-center">
+              <div className="space-y-3 max-h-[calc(100vh-400px)] overflow-y-auto pr-2">
+                {groupedItems[status].length === 0 ? (
+                  <div className="bg-white rounded-xl p-6 text-center">
                     <ApperIcon name="Package" className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500">No items planned</p>
+                    <p className="text-sm text-gray-500">No items</p>
                   </div>
                 ) : (
-                  groupedItems[timeline].map((item, index) => (
+                  groupedItems[status].map((item, index) => (
                     <motion.div
                       key={item.Id}
                       initial={{ opacity: 0, y: 20 }}
