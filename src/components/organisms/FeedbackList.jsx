@@ -3,9 +3,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { feedbackService } from "@/services/api/feedbackService";
 import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
 import Feedback from "@/components/pages/Feedback";
-import FeedbackSubmissionModal from "@/components/organisms/FeedbackSubmissionModal";
 import Loading from "@/components/ui/Loading";
 import Empty from "@/components/ui/Empty";
 import Error from "@/components/ui/Error";
@@ -13,15 +11,13 @@ import FeedbackCard from "@/components/molecules/FeedbackCard";
 import StatusFilter from "@/components/molecules/StatusFilter";
 import SortControl from "@/components/molecules/SortControl";
 import SearchBar from "@/components/molecules/SearchBar";
-
 const FeedbackList = () => {
-  const [feedbackData, setFeedbackData] = useState([])
+const [feedbackData, setFeedbackData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [sortBy, setSortBy] = useState("votes")
-  const [isSubmissionModalOpen, setIsSubmissionModalOpen] = useState(false)
 
   const loadFeedback = async () => {
     setLoading(true)
@@ -83,14 +79,10 @@ const handleVote = async (feedbackId) => {
     )
   }
 
-  const handleFeedbackSubmit = (newFeedback) => {
-    setFeedbackData(prev => [newFeedback, ...prev])
-  }
-
-  if (loading) return <Loading />
+if (loading) return <Loading />
   if (error) return <Error message={error} onRetry={loadFeedback} />
 
-  return (
+return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -102,13 +94,6 @@ const handleVote = async (feedbackId) => {
             Share your ideas and help us improve the product
           </p>
         </div>
-        <Button
-          onClick={() => setIsSubmissionModalOpen(true)}
-          icon="Plus"
-          className="self-start sm:self-auto"
-        >
-          Submit Feedback
-        </Button>
       </div>
 
       {/* Filters */}
@@ -191,8 +176,6 @@ const handleVote = async (feedbackId) => {
         <Empty
           title={searchQuery || statusFilter !== "all" ? "No feedback matches your filters" : "No feedback yet"}
           description={searchQuery || statusFilter !== "all" ? "Try adjusting your search or filters to find what you're looking for." : "Be the first to share your feedback and help improve the product."}
-          actionText="Submit Feedback"
-          onAction={() => setIsSubmissionModalOpen(true)}
           icon="MessageSquare"
         />
       ) : (
@@ -213,12 +196,7 @@ const handleVote = async (feedbackId) => {
         </div>
       )}
 
-      <FeedbackSubmissionModal
-        isOpen={isSubmissionModalOpen}
-        onClose={() => setIsSubmissionModalOpen(false)}
-        onSubmit={handleFeedbackSubmit}
-      />
-    </div>
+</div>
   )
 }
 
