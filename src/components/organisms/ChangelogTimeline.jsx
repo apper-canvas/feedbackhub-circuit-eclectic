@@ -1,28 +1,43 @@
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import ApperIcon from "@/components/ApperIcon"
-import ChangelogEntry from "@/components/molecules/ChangelogEntry"
-import Loading from "@/components/ui/Loading"
-import Error from "@/components/ui/Error"
-import Empty from "@/components/ui/Empty"
-import { changelogService } from "@/services/api/changelogService"
-
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { toast } from "react-toastify";
+import ChangelogEntryModal from "@/components/organisms/ChangelogEntryModal";
+import { changelogService } from "@/services/api/changelogService";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Changelog from "@/components/pages/Changelog";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import ChangelogEntry from "@/components/molecules/ChangelogEntry";
 const ChangelogTimeline = () => {
   const [changelogData, setChangelogData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const loadChangelog = async () => {
     setLoading(true)
     setError("")
     try {
-      const data = await changelogService.getAll()
+const data = await changelogService.getAll()
       setChangelogData(data)
     } catch (err) {
       setError(err.message || "Failed to load changelog")
     } finally {
       setLoading(false)
+    }
+  }
+
+const handleCreateEntry = async (entryData) => {
+    try {
+      await changelogService.create(entryData)
+      toast.success("Changelog entry created successfully!")
+      setIsModalOpen(false)
+      await loadChangelog()
+    } catch (err) {
+      toast.error(err.message || "Failed to create changelog entry")
+      throw err
     }
   }
 
@@ -55,16 +70,25 @@ const ChangelogTimeline = () => {
   const groupedEntries = groupByVersion(changelogData)
   const typeStats = getTypeStats()
 
-  return (
+return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gradient mb-2">
-          Changelog
-        </h1>
-        <p className="text-gray-600">
-          Stay updated with the latest product improvements and releases
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gradient mb-2">
+            Changelog
+          </h1>
+          <p className="text-gray-600">
+            Stay updated with the latest product improvements and releases
+          </p>
+        </div>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+        >
+          <ApperIcon name="Plus" className="h-4 w-4 mr-2" />
+          Add Entry
+        </Button>
       </div>
 
       {/* Stats */}
@@ -129,8 +153,8 @@ const ChangelogTimeline = () => {
         </motion.div>
       </div>
 
-      {/* Timeline */}
-{changelogData.length === 0 ? (
+{/* Timeline */}
+      {changelogData.length === 0 ? (
         <Empty
           title="No changelog entries yet"
           description="Check back soon for product updates and release notes."
@@ -149,6 +173,13 @@ const ChangelogTimeline = () => {
           </div>
         </div>
       )}
+
+      {/* Create Entry Modal */}
+      <ChangelogEntryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleCreateEntry}
+      />
     </div>
   )
 }
