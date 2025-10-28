@@ -130,15 +130,15 @@ const ChangelogTimeline = () => {
       </div>
 
       {/* Timeline */}
-      {changelogData.length === 0 ? (
+{changelogData.length === 0 ? (
         <Empty
           title="No changelog entries yet"
           description="Check back soon for product updates and release notes."
           icon="FileText"
         />
       ) : (
-        <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
-          <div className="space-y-8">
+        <div className="relative">
+          <div className="space-y-0">
             {changelogData.map((entry, index) => (
               <ChangelogEntry
                 key={entry.Id}
